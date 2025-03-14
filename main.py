@@ -8,10 +8,18 @@ if __name__ == "__main__":
         x, y: integer;
     begin
         if x > y then
+        begin
             x := y;
+            write(x);
+        end
         else
+        begin
             y := x;
+            write(y);
+        end;
     end.
+
+
     """
 
     lexer = Lexer(code)

@@ -68,6 +68,8 @@ class Parser:
             self.command()
             if self.current_token[0] == 'PONTO_VIRGULA':
                 self.consume('PONTO_VIRGULA')
+            else:
+                break
         if self.current_token[0] == 'END':
             self.consume('END')
 
@@ -100,18 +102,12 @@ class Parser:
         self.expression()
         self.consume('THEN')
 
-        if self.current_token[0] == 'BEGIN':
-            self.compound_command()
-        else:
-            self.command()
+        self.command()
 
-        # Trata o ELSE se existir
+        # Consome o ELSE corretamente, se existir
         if self.current_token[0] == 'ELSE':
             self.consume('ELSE')
-            if self.current_token[0] == 'BEGIN':
-                self.compound_command()
-            else:
-                self.command()
+            self.command()
 
     def while_command(self):
         """Analisa um comando de repetição WHILE."""
