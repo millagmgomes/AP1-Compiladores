@@ -119,7 +119,47 @@ make clean
 ---
 ## 📝 Funcionamento do Programa
 
-escreva aqui! 📝
+- main.py
+Este arquivo inicia o processo de análise passando um trecho de código-fonte para o analisador léxico e sintático. Se o código estiver correto, ele exibe a mensagem "Programa analisado com sucesso!", caso contrário, informa um erro.
+
+- lexer.py - Analisador Léxico
+O analisador léxico divide o código-fonte em tokens. Ele utiliza expressões regulares para identificar diferentes elementos da linguagem, incluindo:
+> Palavras reservadas (begin, if, else, while, etc.)
+> Operadores (+, -, *, /, :=, etc.)
+> Identificadores (nomes de variáveis e funções)
+> Números inteiros
+> Delimitadores (;, ,, (, ), etc.)
+> Comentários (//, (* ... *), { ... })
+
+- A função get_next_token() lê o próximo token válido e lida com erros lexicais caso encontre caracteres inválidos.
+
+- parser.py - Analisador Sintático
+O analisador sintático recebe os tokens do Lexer e valida a estrutura do código-fonte. Ele implementa um parser descendente recursivo, verificando regras como:
+> Definição de programa (program <identificador>; ... end.)
+> Declaração de variáveis (var x, y: integer;)
+> Comandos (begin ... end)
+> Atribuição (x := y;)
+> Estruturas condicionais (if ... then ... else)
+> Laços de repetição (while ... do)
+> Comandos de entrada/saída (read(x); write(y);)
+
+- A função program() é o ponto de entrada e coordena toda a análise do programa.
+
+- Exemplo de Uso
+Um exemplo de entrada para o sistema seria:
+program exemplo;
+var
+    x, y: integer;
+begin
+    if x > y then
+        x := y;
+    else
+        y := x;
+end.
+
+Este código será processado pelo Lexer e depois pelo Parser. Se estiver sintaticamente correto, a saída será:
+Programa analisado com sucesso!
+
 --- 
 ## 📖 Saiba Mais na Wiki
 
