@@ -67,6 +67,6 @@ class Lexer:
             else:
                 erro_lexema = self.source_code[self.position]
                 self.position += 1
-                return ('ERRO_LEXICO', f"Erro léxico na linha {self.line}: caractere inválido '{erro_lexema}'", self.line)
+                raise Exception(f"Erro léxico na linha {self.line}: caractere inválido '{erro_lexema}'")
 
         return ('EOF', 'EOF', self.line)
