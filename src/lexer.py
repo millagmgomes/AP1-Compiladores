@@ -20,7 +20,7 @@ class Lexer:
             (r'//.*', None),  # Comentário de linha
             (r'\(\*[\s\S]*?\*\)', None),  # Comentário de bloco (* ... *)
             (r'\{[\s\S]*?\}', None),  # Comentário de bloco { ... }
-            (r':=', 'ATRIBUICAO'),
+            (r'\:=', 'ATRIBUICAO'),
             (r':', 'DOIS_PONTOS'),
             (r';', 'PONTO_VIRGULA'),
             (r'\.', 'PONTO_FINAL'),
@@ -31,7 +31,7 @@ class Lexer:
             (r'\+|-', 'ADICAO'),
             (r'\*|/', 'MULTIPLICACAO'),
             (r'\b(' + '|'.join(self.reserved_words.keys()) + r')\b', self.handle_reserved_word),
-            (r'[a-zA-Z_][a-zA-Z0-9_]{0,19}', self.handle_identifier),
+            (r'[a-zA-Z_][a-zA-Z0-9_]*', self.handle_identifier),
             (r'\d+', self.handle_number)
         ]
 
@@ -47,26 +47,26 @@ class Lexer:
     def handle_newline(self, lexeme):
         self.line += 1
         return None
+    
+    def handle_invalid_identifier(self, lexeme):
+        return ('ERRO_LEXICO', f"Erro léxico na linha {self.line}: identificador inválido ' {lexeme}'", self.line)
+
+    def handle_invalid_character(self, lexeme):
+        return ('ERRO_LEXICO', f"Erro léxico na linha {self.line}: identificador inválido ' {lexeme}'", self.line)
 
     def get_next_token(self):
         while self.position < len(self.source_code):
-            substring = self.source_code[self.position:]
-            for pattern, token_type in self.token_patterns:
-                match = re.match(pattern, substring)
+            for pattern, action in self.token_patterns:
+                regex = re.compile(pattern)
+                match = regex.match(self.source_code, self.position)
                 if match:
                     lexeme = match.group(0)
                     self.position += len(lexeme)
-                    if token_type is None:
-                        break  # Continua o loop para o próximo caractere
-                    if callable(token_type):
-                        result = token_type(lexeme)
-                        if result is None:
-                            break  # Ignora tokens como quebras de linha e continua
-                        return result
-                    return (token_type, lexeme, self.line)
-            else:
-                erro_lexema = self.source_code[self.position]
-                self.position += 1
-                raise Exception(f"Erro léxico na linha {self.line}: caractere inválido '{erro_lexema}'")
+                    if action:
+                        token = action(lexeme) if callable(action) else (action, lexeme, self.line)
+                        if token: 
+                            return token
+                        
+                    break
 
-        return ('EOF', 'EOF', self.line)
+        return ('EOF', 'EOF', self.line)        

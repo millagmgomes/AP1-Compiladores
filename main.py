@@ -2,45 +2,29 @@ from src.lexer import Lexer
 from src.parser import Parser
 
 if __name__ == "__main__":
-
-    code_error_lexer = """ 
-    program exemplo;
-        var
-            numero: integer;
-        begin
-            numero := 10;
-            numero := 20#; 
-        end.
-    """
-
-    code_error_sintax = """
+    code = """
     program exemplo;
     var
-        numero: integer;
-    begin
-        numero := ; 
-    end.
-    """
-    code_clean = """
-    program exemplo;
-    var
-        numero: integer;
-        resultado: integer;
-    begin
-        numero := 10;
-        resultado := numero * 2;
-        
-        if resultado > 15 then
-            write(resultado)
-        else
-            write(0);
+        x, y: integer;
+        num: integer;
             
-        read(numero);
+    begin   
+        num := 10;
+        if x > y then
+        begin
+            x := y;
+            write(x);
+        end
+        else
+        begin
+            y := x;
+            write(y);
+        end;
     end.
 
     """
 
-    lexer = Lexer(code_error_sintax)
+    lexer = Lexer(code)
     parser = Parser(lexer)
     
     try:
